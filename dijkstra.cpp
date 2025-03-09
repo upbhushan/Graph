@@ -71,3 +71,38 @@ class solution{
     }
 
 };
+
+
+
+vector<int> dijkstra(vector<vector<pair<int, int>>> &adj, int n, int src){
+    vector<int> dist(n,1e9);
+    priority_queue<
+    pair<int,int>,
+    vector<pair<int,int>>,
+    greater<pair<int,int>>
+    > pq;
+
+    pq.push({0,src});
+
+    dist[src]=0;
+
+    while(!pq.empty()){
+        auto ele=pq.top(); pq.pop();
+
+        int distance=ele.first;
+        int node=ele.second;
+
+        if (distance > dist[node]) continue;
+
+        for(auto ele:adj[node]){
+            int edgw=ele.second;
+            int neighbour=ele.first;
+
+            if(dist[node]+edgw < dist[neighbour]){
+                dist[neighbour]=dist[node]+edgw;
+                pq.push({dist[neighbour],neighbour});
+            }
+        }
+    }
+    return dist;
+}

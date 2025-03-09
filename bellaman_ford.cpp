@@ -4,15 +4,15 @@ using namespace std;
 class solution
 {
 public:
-    vector<int> bellaman_ford(vector<vector<int>> &edges)
+    vector<int> bellman_ford(int v, vector<vector<int>> &edges, int src)
     {
-        int v = edges.size();
         vector<int> dist(v, 1e9);
-        dist[0] = 0;
+        dist[src] = 0;
 
+        // Relax all edges (V-1) times
         for (int i = 0; i < v - 1; i++)
         {
-            for (auto ele : edges)
+            for (auto &ele : edges)
             {
                 int u = ele[0];
                 int v = ele[1];
@@ -23,18 +23,21 @@ public:
                     dist[v] = dist[u] + wt;
                 }
             }
+        }
 
-            for (auto ele : edges)
+        // **Negative Cycle Detection 
+        for (auto &ele : edges)
+        {
+            int u = ele[0];
+            int v = ele[1];
+            int wt = ele[2];
+
+            if (dist[u] != 1e9 && dist[u] + wt < dist[v])
             {
-                int u = ele[0];
-                int v = ele[1];
-                int wt = ele[2];
-                if (dist[u] != 1e9 && dist[u] + wt < dist[v])
-                {
-                    return {-1};
-                }
+                return {-1}; // Negative cycle detected
             }
         }
+
         return dist;
     }
 };
